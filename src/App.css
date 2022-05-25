@@ -1,0 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+html,body, #root,.App{
+  height: 100%;
+  /* background: black */
+}
+canvas{
+  /* background: black;
+  height: 100%; */
+  background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(37,23,88,1) 57%, rgba(54,50,69,1) 93%);
+}
+
