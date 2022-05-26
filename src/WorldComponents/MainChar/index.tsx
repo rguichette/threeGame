@@ -22,9 +22,21 @@ let fbx:any;
 
 
 
-
 let  MainChar =() => {
   fbx = useFBX("/assets/characters/main/_player.fbx")
+  // let t = fbx
+  // console.log("FBX", t.children );
+  
+  // let gltf = useGLTF("/assets/characters/main/T-Pose.fbx")
+  console.log(fbx.children);
+  // fbx.remove(fbx.children[0]);
+
+  //removing built in light
+  if(fbx.children[2].name =="Light001"){
+   
+    fbx.remove(fbx.children[2]);
+    
+  }
   let posZ = 0;
   let PosX = 0;
   let _ref= useRef<THREE.Mesh>(null!) ; //private
@@ -36,23 +48,29 @@ let  MainChar =() => {
 
 
 playAnimations(actions)
-    
+ 
   return (
     <>
+    <group>
+
     <mesh 
     ref={meshRef}
-  
+    
     position={ [PosX, 0, posZ] }
+
     scale ={[.018,.018,.018]} 
     >
-    <primitive  ref={_ref} object={fbx}/>
-
+    <primitive cale ={[.018,.018,.018]}  
+    ref={_ref}
+    object={fbx} 
+    />
+    <meshNormalMaterial/>
 </mesh>
+    </group>
     </>
   )
 }
 
-useGLTF.preload("/assets/characters/main/blue.gltf");
 
 
 
@@ -64,7 +82,7 @@ function loadAnimationFBX(animationFiles:{}, fbx:any){
     let fbxPath = animationFiles[anim as keyof typeof animationFiles];
     let fbxAnimation = useLoader<THREE.Group, string>(FBXLoader,fbxPath).animations[0]
    
-    console.log(fbxAnimation);
+    // console.log(fbxAnimation);
     
     let _action = mixer.clipAction(fbxAnimation)
     actions.push(_action)    
@@ -94,9 +112,12 @@ actions[0].play()
   //--> first being loaded --> once
 
   document.onkeydown = (e) =>{
+
+
     switch (e.key) {
       case "Up": // IE/Edge specific value
       case "ArrowUp": 
+      case"w":
       if(idle_anim.isRunning()){
         idle_anim.crossFadeTo(walk_anim,1.5, false)
         idle_anim.stop()
@@ -106,10 +127,7 @@ actions[0].play()
         console.log('IDLE');
         
       }
-
-      
-        
-        
+  
         break;
         
         default:
@@ -119,8 +137,10 @@ actions[0].play()
       
       document.onkeyup = (e) =>{
         switch (e.key) {
+
           case "Up": // IE/Edge specific value
-          case "ArrowUp":
+          case "ArrowUp": //
+          case "w":
             if(walk_anim.isRunning()){
               walk_anim.crossFadeTo(stop_walking_anim, .25,false).setLoop(THREE.LoopOnce,1).play().crossFadeTo(idle_anim,1,false)
               walk_anim.stop()
@@ -135,7 +155,14 @@ actions[0].play()
   }
 
 
+  type eName = "keydown" | "keyup" 
+  let walkingAnimations = (eventName:eName, e:KeyboardEvent) =>{
+
 }
+
+}
+
+
 
 console.log('OUTSIDE: ', fbx);
 

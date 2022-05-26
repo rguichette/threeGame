@@ -31,36 +31,41 @@ function App() {
   let camRef = useRef<THREE.PerspectiveCamera>(null!)
   
 
+  // let test = useFBX('/assets/characters/main/untitled.fbx')
+
   
   return (
     <div className="App">
-     <Canvas shadows 
+     <Canvas 
       camera={camRef.current}
 
 
      >
        <Suspense fallback={null}>
 
-         <PerspectiveCamera ref={camRef} rotation={[-.15,0,0]} position={[0,1.5,10]} makeDefault fov={45} aspect={width/height} near={1}  far={1000} />
+         <PerspectiveCamera ref={camRef}
+          // rotation={[-.15,0,0]}
+         
+         position={[0,2,10]} makeDefault fov={45} aspect={width/height} near={1}  far={1000} />
 
 
-<MainChar/>
-
+<MainChar />
 
 <Floor   
-position={[0,0,1]} scale={[1000,1000,1000]}
+position={[0,0,1]} scale={[500,500,500]}
 rotation={[ -(Math.PI/2), 0,0]}
 />
 
 
-<pointLight position={[-5,5, 1]}/>
+{/* <pointLight position={[-5,5, 1]}/> */}
 
 </Suspense>
 
-<ambientLight/>
-<OrbitControls 
+<ambientLight />
+<OrbitControls
 //  enableZoom={false} 
- maxPolarAngle={Math.PI}  minPolarAngle={.1}/>
+//  maxPolarAngle={Math.PI}  minPolarAngle={.1}
+ />
 </Canvas>
     </div>
   )
