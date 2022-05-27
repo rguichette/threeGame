@@ -1,13 +1,13 @@
-import { useAnimations, useFBX, useGLTF } from '@react-three/drei';
+import { PointerLockControls, useAnimations, useFBX, useGLTF } from '@react-three/drei';
 import { useFrame, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 
-import React, { forwardRef, useEffect, useRef } from 'react'
+import React, { forwardRef, Ref, RefObject, useEffect, useRef } from 'react'
 import * as THREE from 'three';
 
 import animationFiles from '../../fbxAnim'
-import { AnimationAction, AnimationClip, AnimationMixer } from 'three';
+import { AnimationAction, AnimationClip, AnimationMixer, BufferGeometry, Material, Mesh } from 'three';
 
 let actions: THREE.AnimationAction[] = []
 
@@ -22,30 +22,32 @@ let fbx:any;
 
 
 
-let  MainChar =() => {
+let  MainChar = forwardRef((props,forwardRef)=> {
   fbx = useFBX("/assets/characters/main/_player.fbx")
-  // let t = fbx
-  // console.log("FBX", t.children );
-  
-  // let gltf = useGLTF("/assets/characters/main/T-Pose.fbx")
-  console.log(fbx.children);
-  // fbx.remove(fbx.children[0]);
+
 
   //removing built in light
   if(fbx.children[2].name =="Light001"){
-   
+    console.log("LIGHT",fbx.children);
     fbx.remove(fbx.children[2]);
     
   }
-  let posZ = 0;
-  let PosX = 0;
-  let _ref= useRef<THREE.Mesh>(null!) ; //private
-  let meshRef = useRef<THREE.Mesh>(null!)
+//changing fbx main light intensity since it came in too bright
+  if(fbx.children[0].name =="Light"){
+    fbx.children[0].intensity = 1;
+  }
+
+
+  let posZ =1;
+  let PosX = 7;
+  let _ref= useRef<THREE.Mesh>() ; //private
+  // let meshRef = useRef<THREE.Mesh>(null!)
 
 
   actions = loadAnimationFBX(animationFiles,fbx)
 
-
+  
+// })
 
 playAnimations(actions)
  
@@ -54,7 +56,7 @@ playAnimations(actions)
     <group>
 
     <mesh 
-    ref={meshRef}
+    ref={forwardRef as Ref<Mesh<BufferGeometry, Material | Material[]>> | undefined }
     
     position={ [PosX, 0, posZ] }
 
@@ -66,15 +68,16 @@ playAnimations(actions)
     />
     <meshNormalMaterial/>
 </mesh>
+
     </group>
     </>
   )
-}
+})
 
 
 
 
-
+//uses FBX to attach the animation
 function loadAnimationFBX(animationFiles:{}, fbx:any){
   let actions = [];
   let mixer = new THREE.AnimationMixer(fbx);
@@ -90,6 +93,7 @@ function loadAnimationFBX(animationFiles:{}, fbx:any){
   }
 
   useFrame((state, delta) => {
+    
 
     mixer.update(delta)
     
@@ -98,7 +102,7 @@ function loadAnimationFBX(animationFiles:{}, fbx:any){
   
 }
 
-
+//uses FBX to UPDATE its position;
 function playAnimations(actions:AnimationAction[] ){
 
 //default is Idle --> TODO: state weapons control
@@ -162,8 +166,5 @@ actions[0].play()
 
 }
 
-
-
-console.log('OUTSIDE: ', fbx);
 
 export default MainChar

@@ -1,25 +1,16 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Ref, RefObject, Suspense, useEffect, useRef, useState } from 'react'
 
 import './App.css'
 import * as THREE from 'three'
 import {Canvas, useFrame} from '@react-three/fiber'
-import {Cloud, Environment, Lightformer, OrbitControls,  PerspectiveCamera, Sky, Stars, useAnimations, useFBX, useGLTF } from '@react-three/drei'
+import {Cloud, Environment, Lightformer, OrbitControls,  PerspectiveCamera, PointerLockControls, Sky, Stars, useAnimations, useFBX, useGLTF } from '@react-three/drei'
 
 import Floor from './WorldComponents/Floor'
 import MainChar from './WorldComponents/MainChar'
-import { Group } from 'three'
+import World from './WorldComponents/World'
+import { BufferGeometry, Fog, Group, Material, Mesh } from 'three'
 
 function App() {
-  // let character= useGLTF('/assets/characters/running/run4.gltf')
-  // let character= useGLTF('/assets/characters/testRun.gltf')
-  // // console.log(character);
-  
-  // let actions = useAnimations(character.animations, character.scene)
-
-  // // let character = useFBX('/assets/characters/Standard_Run.fbx');
-
-  // console.log(actions);
-  
 
   
 
@@ -30,42 +21,31 @@ function App() {
   let floorRef = useRef<THREE.Mesh>(null!)
   let camRef = useRef<THREE.PerspectiveCamera>(null!)
   
-
-  // let test = useFBX('/assets/characters/main/untitled.fbx')
-
   
+let controls = useRef() 
+
+
   return (
     <div className="App">
-     <Canvas 
-      camera={camRef.current}
+     <Canvas className='canvas'
 
 
      >
+
        <Suspense fallback={null}>
 
-         <PerspectiveCamera ref={camRef}
-          // rotation={[-.15,0,0]}
-         
-         position={[0,2,10]} makeDefault fov={45} aspect={width/height} near={1}  far={1000} />
+
+          makeDefault fov={45}
+           aspect={width/height} 
+           near={1}  far={1000} 
 
 
-<MainChar />
-
-<Floor   
-position={[0,0,1]} scale={[500,500,500]}
-rotation={[ -(Math.PI/2), 0,0]}
-/>
-
-
-{/* <pointLight position={[-5,5, 1]}/> */}
-
+<World/>
 </Suspense>
 
 <ambientLight />
-<OrbitControls
-//  enableZoom={false} 
-//  maxPolarAngle={Math.PI}  minPolarAngle={.1}
- />
+
+
 </Canvas>
     </div>
   )
