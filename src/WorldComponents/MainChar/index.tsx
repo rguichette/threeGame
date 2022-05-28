@@ -22,6 +22,8 @@ let fbx:any;
 
 
 
+
+
 let  MainChar = forwardRef((props,forwardRef)=> {
   fbx = useFBX("/assets/characters/main/_player.fbx")
 
@@ -49,7 +51,10 @@ let  MainChar = forwardRef((props,forwardRef)=> {
   
 // })
 
-playAnimations(actions)
+
+  playAnimations(actions)
+
+
  
   return (
     <>
@@ -78,7 +83,7 @@ playAnimations(actions)
 
 
 //uses FBX to attach the animation
-function loadAnimationFBX(animationFiles:{}, fbx:any){
+function loadAnimationFBX(animationFiles:{}, fbx:THREE.Mesh){
   let actions = [];
   let mixer = new THREE.AnimationMixer(fbx);
   for( const anim in animationFiles ){
@@ -103,7 +108,7 @@ function loadAnimationFBX(animationFiles:{}, fbx:any){
 }
 
 //uses FBX to UPDATE its position;
-function playAnimations(actions:AnimationAction[] ){
+function playAnimations(actions:AnimationAction[] , fbx?:THREE.Mesh ){
 
 //default is Idle --> TODO: state weapons control
 let idle_anim = actions[0];
@@ -128,7 +133,8 @@ actions[0].play()
         stop_walking_anim.stop()
         walk_anim.play()
 
-        console.log('IDLE');
+
+
         
       }
   

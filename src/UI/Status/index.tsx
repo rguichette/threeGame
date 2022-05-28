@@ -19,7 +19,8 @@ export default function Status() {
       <Flex justifyContent={"space-between"}>
         <Progress
           marginLeft="3rem"
-          width="200px"
+          marginRight="2rem"
+          width="100px"
           value={80}
           size="sm"
           color="red"
@@ -30,11 +31,12 @@ export default function Status() {
 
         <Progress
           marginRight="3rem"
-          width="200px"
+          marginLeft="2rem"
+          width="100px"
           value={10}
           size="sm"
           color="red"
-          borderRadius={"20px"}
+          borderRadius={"20px"}          
           // borderColor="white"
           borderWidth={"1px"}
         />

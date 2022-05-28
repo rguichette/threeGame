@@ -29,7 +29,6 @@ function App() {
   let height = window.screen.height;
 
   let floorRef = useRef<THREE.Mesh>(null!);
-  let camRef = useRef<THREE.PerspectiveCamera>(null!);
 
   let controls = useRef();
 
@@ -45,6 +44,7 @@ function App() {
         </Suspense>
 
         <ambientLight />
+        {/* <OrbitControls makeDefault/> */}
       </Canvas>
     </div>
   );

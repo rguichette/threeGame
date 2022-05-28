@@ -47,19 +47,21 @@ let controls:PointerLockControls;
   useEffect(() => {
     controls = new PointerLockControls( camRef.current as THREE.Camera, document.body );
     console.log("charRef", characterRef.current?.position);
-    if (characterRef.current?.position)
-      camRef.current?.lookAt(
-        characterRef.current?.position.x,
-        0,
-        characterRef.current?.position.y
-      );
 
-    //rotate cam to behind character
-    if (camRef.current) {
-      camRef.current.rotation.x = (40 * Math.PI) / 180;
-      camRef.current.position.x = 10;
-      if (characterRef.current)
-        camRef.current.position.x = characterRef.current?.position.x - 2;
+
+      if (characterRef.current && camRef.current){
+        controls.getObject().position.y = characterRef.current.position.y +2
+        controls.getObject().position.x = characterRef.current.position.x
+
+        //going past character (getting cam behind char)
+        controls.getObject().position.z = characterRef.current.position.z -7
+        //rotation to make up for passing "through" the character
+        controls.getObject().rotation.y = Math.PI
+
+        // controls.minPolarAngle = 2.5708
+
+        
+
     }
 
     canvas.addEventListener('click',()=>{
@@ -69,15 +71,14 @@ let controls:PointerLockControls;
 
     document.addEventListener("mousemove",(e)=>{
 
-
       if(controls.isLocked){
         console.log("controls",e.movementX);
         //mouse "rotate"
-        if(e.movementX >0)
-        controls.moveRight(-.035)
+      //   if(e.movementX >0){}
+      //   controls.moveRight(1)
 
-        if(e.movementX <0)
-        controls.moveRight(.035)
+      //   if(e.movementX <0){}
+      //   controls.moveRight(.25)
 
       }
       // controls.moveRight(.1)
@@ -88,6 +89,13 @@ let controls:PointerLockControls;
   useHelper(camRef, CameraHelper);
 
   useFrame(() => {
+
+    controls.addEventListener('change', (c) => {
+      if (characterRef.current && camRef.current){
+
+        // characterRef.current.position.copy(c.target.clone());
+      }
+    });
     //update character movements here and along with the camera position: ;
     // console.log(camRotation);
 // if(controls){
@@ -109,14 +117,15 @@ canvas.addEventListener('click', ()=>{
     
 
     if (camRef.current) {
+  
       if (characterRef.current?.position) {
-        camRef.current?.lookAt(
-          characterRef.current?.position.x,
-          3,
-          characterRef.current?.position.z
-        );
+        // camRef.current?.lookAt(
+        //   characterRef.current?.position.x,
+        //   3,
+        //   characterRef.current?.position.z
+        // );
 
-        camRef.current.position.z = characterRef.current?.position.z - 7;
+        // camRef.current.position.z = characterRef.current?.position.z - 7;
 
         //rotation betawenn -.5 and .5
         // camRef.current.rotation.y = camRotation
