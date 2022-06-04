@@ -8,6 +8,7 @@ import * as THREE from 'three';
 
 import animationFiles from '../../fbxAnim'
 import { AnimationAction, AnimationClip, AnimationMixer, BufferGeometry, Material, Mesh } from 'three';
+import { useControlChar } from '../../controls/playControls';
 
 let actions: THREE.AnimationAction[] = []
 
@@ -40,8 +41,8 @@ let  MainChar = forwardRef((props,forwardRef)=> {
   }
 
 
-  let posZ =1;
-  let PosX = 7;
+  let posZ =0;
+  let PosX = 1;
   let _ref= useRef<THREE.Mesh>() ; //private
   // let meshRef = useRef<THREE.Mesh>(null!)
 
@@ -52,9 +53,9 @@ let  MainChar = forwardRef((props,forwardRef)=> {
 // })
 
 
-  playAnimations(actions)
+  // playAnimations(actions)
 
-
+useControlChar(actions, fbx)
  
   return (
     <>
@@ -171,6 +172,9 @@ actions[0].play()
 }
 
 }
+
+
+
 
 
 export default MainChar
