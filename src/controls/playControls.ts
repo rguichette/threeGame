@@ -8,7 +8,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 
-import React, { forwardRef, Ref, RefObject, useEffect, useRef } from "react";
+import React, { forwardRef, Ref, RefObject, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 import animationFiles from "../fbxAnim";
@@ -30,6 +30,12 @@ let isWalking = false;
 let isBacking = false;
 let isIdle = true;
 
+//turns
+let leftTurn = false;
+let rightTurn = false;
+
+//used to help key listener for useFrame
+let isKeyPress = false;
 /**
  * animates the character and updates its position based on key press
  * @param actions
@@ -42,26 +48,37 @@ export function useControlChar(actions: AnimationAction[], fbx: THREE.Mesh) {
   console.log("actions", actions);
 
   useFrame((state, delta) => {
+    if(isKeyPress){
+      console.log("Forward:", isWalking, "backing:", isBacking, "left:",leftTurn, "right:", rightTurn )
+    }
     playAnimations(actions);
-    charMovement(fbx)
+    charMovement(fbx);
   });
+
+
+
+
+
+  
+  
+  
 }
 
 function switchWalkFB(e: KeyboardEvent) {
   switch (e.key) {
     case "Up":
-    case "ArrowUp":
-    case "w":
+      case "ArrowUp":
+        case "w":
       isWalking = true;
       break;
-    case "Down":
-    case "ArrowDown":
-    case "s":
+      case "Down":
+        case "ArrowDown":
+          case "s":
       isBacking = true;
 
     default:
       isWalking = false;
-  }
+    }
 }
 
 // //animation handlers
@@ -75,14 +92,15 @@ function playAnimations(actions: AnimationAction[]) {
   }
 }
 
-function charMovement(fbx: THREE.Mesh){
-    if(isWalking){
-        fbx.position.z += walkingSpeed
-    }
+function charMovement(fbx: THREE.Mesh) {
+  if (isWalking) {
+    fbx.position.z += walkingSpeed;
+  }
 }
 
 document.addEventListener("keydown", (e) => {
-  console.log("pressing");
+  isKeyPress = true
+  
   switch (e.key) {
     case "Up":
     case "ArrowUp":
@@ -91,19 +109,49 @@ document.addEventListener("keydown", (e) => {
 
       break;
     case "Down":
-        case "ArrowDown":
-            case "s":
-               isBacking = true;
+    case "ArrowDown":
+    case "s":
+      isBacking = true;
+    case "ArrowLeft":
+    case "a":
+      leftTurn = true;
+      break;
+    case "ArrowRight":
+    case "d":
+      rightTurn = true;
+      break;
 
     default:
       break;
   }
+ 
 });
-
+//turns events off when key is up
 document.addEventListener("keyup", (e) => {
-  isWalking = false;
-  isBacking =false;
+  isKeyPress = false
+  switch (e.key) {
+    case "Up":
+    case "ArrowUp":
+    case "w":
+      isWalking = false;
+
+      break;
+    case "Down":
+    case "ArrowDown":
+    case "s":
+      isBacking = false;
+      break;
+    case "ArrowLeft":
+    case "a":
+      leftTurn = false;
+      break;
+    case "ArrowRight":
+    case "d":
+      rightTurn = false;
+      break;
+
+    default:
+      break;
+  }
+
 });
-
-
-
