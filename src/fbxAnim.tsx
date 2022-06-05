@@ -4,6 +4,7 @@ let files = {
     walk_stop: '/assets/characters/main/animations/freeHands/walk_stop.fbx',
     
     crouchWalkStrafeLeft :'/assets/characters/main/animations/Crouch Walk Strafe Left.fbx',
+    standardRun: "/assets/characters/main/animations/freeHands/Standard Run.fbx"
     
 };
 

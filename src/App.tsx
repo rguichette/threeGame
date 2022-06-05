@@ -44,7 +44,7 @@ function App() {
         </Suspense>
 
         <ambientLight />
-        {/* <OrbitControls makeDefault/> */}
+        {/* <OrbitControls /> */}
       </Canvas>
     </div>
   );

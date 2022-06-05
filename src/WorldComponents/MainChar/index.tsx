@@ -72,6 +72,7 @@ useControlChar(actions, fbx)
     ref={_ref}
     object={fbx} 
     />
+     <primitive object={new THREE.AxesHelper(10)} />
     <meshNormalMaterial/>
 </mesh>
 

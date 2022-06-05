@@ -20,6 +20,7 @@ import {
   Material,
   Mesh,
 } from "three";
+import { keyframes } from "@emotion/react";
 
 let actions: THREE.AnimationAction[] = [];
 
@@ -45,11 +46,11 @@ let isKeyPress = false;
  */
 
 export function useControlChar(actions: AnimationAction[], fbx: THREE.Mesh) {
-  console.log("actions", actions);
+  // console.log("actions", actions);
 
   useFrame((state, delta) => {
     if(isKeyPress){
-      console.log("Forward:", isWalking, "backing:", isBacking, "left:",leftTurn, "right:", rightTurn )
+      // console.log("Forward:", isWalking, "backing:", isBacking, "left:",leftTurn, "right:", rightTurn )
     }
     playAnimations(actions);
     charMovement(fbx);
@@ -83,75 +84,107 @@ function switchWalkFB(e: KeyboardEvent) {
 
 // //animation handlers
 function playAnimations(actions: AnimationAction[]) {
+  let idle = actions[0];
+  let walk = actions[1];
+  let run = actions[4]
+  let stopWalk = actions [2]
+  
+
   actions[0].play();
+  
+  if(isRunning){
+    console.log('RUNNING');
+    
+    // actions[4].play()
+  }else if(isWalking){
+    console.log("WALKING");
+    
+  }
+  
+  
   if (isWalking) {
     actions[0].fadeOut(1).stop();
     actions[1].play();
-  } else {
+  } else if(isRunning){
+
+  }else {
     actions[1].fadeOut(1).stop();
   }
+
+
+
+
+  
 }
 
 function charMovement(fbx: THREE.Mesh) {
   if (isWalking) {
-    fbx.position.z += walkingSpeed;
+    // fbx.position.z += walkingSpeed;
+    // fbx.translateZ(walkingSpeed)
+  }
+  if(leftTurn){
+    fbx.rotateY(.05)
+  }
+  if(rightTurn){
+    fbx.rotateY(-.05)
   }
 }
 
-document.addEventListener("keydown", (e) => {
-  isKeyPress = true
-  
-  switch (e.key) {
-    case "Up":
-    case "ArrowUp":
-    case "w":
-      isWalking = true;
 
-      break;
-    case "Down":
-    case "ArrowDown":
-    case "s":
-      isBacking = true;
-    case "ArrowLeft":
-    case "a":
-      leftTurn = true;
-      break;
-    case "ArrowRight":
-    case "d":
-      rightTurn = true;
-      break;
+//keeps track of pressed btns
+let keys:any = {};
 
-    default:
-      break;
-  }
+document.onkeydown = (e) =>{
+if(!keys[e.key]){
+  keys[e.key] = true
+}
+
+
+}
+
+document.onkeyup = e =>{
+return  keys[e.key] = false
+//  console.log("deleting key: " ,keys[e.key]);
+//  for (var k in keys){
+//   if(keys[k] == keys[e.key]){
+//     console.log(k);
+    
+//   }
+   
+//  }
  
-});
-//turns events off when key is up
-document.addEventListener("keyup", (e) => {
-  isKeyPress = false
-  switch (e.key) {
-    case "Up":
-    case "ArrowUp":
-    case "w":
-      isWalking = false;
+}
+  
+let move =()=>{
 
-      break;
-    case "Down":
-    case "ArrowDown":
-    case "s":
-      isBacking = false;
-      break;
-    case "ArrowLeft":
-    case "a":
-      leftTurn = false;
-      break;
-    case "ArrowRight":
-    case "d":
-      rightTurn = false;
-      break;
 
-    default:
-      break;
+  if(keys["ArrowUp"]){
+  //  console.log("walking");
+   isWalking = true;
+  }else{
+    isWalking = false;
   }
+  if(keys["Shift"]){
+  console.log("running");
+  isRunning = true;
+  isWalking = false;
+  }else{
+    isRunning = false;
+  }
+}
 
-});
+setInterval(move, 100);
+ 
+
+//turns events off when key is up
+// document.addEventListener("keyup", (e) => {
+//   let key = e.key
+//   if(key == 'w' || key =="ArrowUp" || key =="Up"){
+//     isWalking = false
+//   }
+
+
+
+
+// });
+

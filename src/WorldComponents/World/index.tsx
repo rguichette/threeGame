@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Stars, useHelper , PointerLockControls as PLC } from "@react-three/drei";
+import { PerspectiveCamera, Stars, useHelper , PointerLockControls as PLC, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import React, { createRef, Ref, RefObject, useEffect, useRef } from "react";
 import THREE, { Mesh, BufferGeometry, Material, CameraHelper } from "three";
@@ -36,47 +36,6 @@ let controls:PointerLockControls;
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-
-  // document.addEventListener("mousemove",(e)=>{
-  //   if(controls.isLocked){
-  //     console.log("controls",e);
-  //     // controls.moveRight(.001)
-  //   }
-  //   // controls.moveRight(.1)
-  // })
-
-  useEffect(() => {
-    // controls = new PointerLockControls( camRef.current as THREE.Camera, document.body );
-    // console.log("charRef", characterRef.current?.position);
-
-
-      // if (characterRef.current && camRef.current){
-      //   controls.getObject().position.y = characterRef.current.position.y +2
-      //   controls.getObject().position.x = characterRef.current.position.x
-
-      //   //going past character (getting cam behind char)
-      //   controls.getObject().position.z = characterRef.current.position.z -7
-      //   //rotation to make up for passing "through" the character
-      //   controls.getObject().rotation.y = Math.PI
-
-        // controls.minPolarAngle = 2.5708
-
-        
-
-    // }
-
-    // canvas.addEventListener('click',()=>{
-    //   console.log("LOCKED");
-    //   controls.lock()
-      
-    // })
-
-    // document.addEventListener("mousemove",(e)=>{
-
-    //   // controls.moveRight(.1)
-    // })
-
-  }, []);
 
   useHelper(camRef, CameraHelper);
 

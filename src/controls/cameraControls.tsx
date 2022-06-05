@@ -34,9 +34,10 @@ export function useCamControls( camera:React.MutableRefObject<THREE.PerspectiveC
         let cPos = character.current?.children[0].position;
         character.current?.children[0].getWorldPosition(objPos)
         // console.log("mesh --> ",objPos );
-
         // character.current?.getWorldPosition(objPos)
         camera.current?.position.copy(objPos).add(cameraOffset)
+        if(camera.current)
+        character.current?.rotation.setFromRotationMatrix(camera.current?.matrix)
         // character.current?.rotateY(2)
         // console.log("OBJ: ", ca);
      
