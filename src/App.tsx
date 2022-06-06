@@ -44,7 +44,6 @@ function App() {
         </Suspense>
 
         <ambientLight />
-        {/* <OrbitControls /> */}
       </Canvas>
     </div>
   );

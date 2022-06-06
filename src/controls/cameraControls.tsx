@@ -27,17 +27,31 @@ export function useCamControls( camera:React.MutableRefObject<THREE.PerspectiveC
     }, [])
     
     window.addEventListener("keypress", (e)=>{
+        console.log("yup");
         
-        
+        if(character.current){
+            console.log(character.current?.rotation);
+           
+        }
+         if(camera.current){
+                console.log("cam");
+                
+                camera.current.rotation.set(Math.PI, 0, 0)
+            }
     })
     useFrame(()=>{
+
+
+        
         let cPos = character.current?.children[0].position;
         character.current?.children[0].getWorldPosition(objPos)
         // console.log("mesh --> ",objPos );
         // character.current?.getWorldPosition(objPos)
         camera.current?.position.copy(objPos).add(cameraOffset)
-        if(camera.current)
-        character.current?.rotation.setFromRotationMatrix(camera.current?.matrix)
+        if(camera.current){
+           
+            // character.current?.rotation.setFromRotationMatrix(camera.current?.matrix)
+        }
         // character.current?.rotateY(2)
         // console.log("OBJ: ", ca);
      

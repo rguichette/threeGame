@@ -4,11 +4,18 @@ import {
   useFBX,
   useGLTF,
 } from "@react-three/drei";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 
-import React, { forwardRef, Ref, RefObject, useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  Ref,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import * as THREE from "three";
 
 import animationFiles from "../fbxAnim";
@@ -16,6 +23,7 @@ import {
   AnimationAction,
   AnimationClip,
   AnimationMixer,
+  AxesHelper,
   BufferGeometry,
   Material,
   Mesh,
@@ -24,8 +32,8 @@ import { keyframes } from "@emotion/react";
 
 let actions: THREE.AnimationAction[] = [];
 
-let walkingSpeed = 0.4;
-let runningSpeed = 0.7;
+let walkingSpeed = 0.8;
+let runningSpeed = 0.8;
 let isRunning = false;
 let isWalking = false;
 let isBacking = false;
@@ -44,137 +52,143 @@ let isKeyPress = false;
  *
  * @param fbx the object you want to animate and apply position updates to
  */
+let prevAction: THREE.AnimationAction;
+let activeAction: THREE.AnimationAction;
 
 export function useControlChar(actions: AnimationAction[], fbx: THREE.Mesh) {
   // console.log("actions", actions);
 
+
   useFrame((state, delta) => {
-    if(isKeyPress){
-      // console.log("Forward:", isWalking, "backing:", isBacking, "left:",leftTurn, "right:", rightTurn )
+    if (isKeyPress) {
+      console.log("Forward:", isWalking, "backing:", isBacking, "left:",leftTurn, "right:", rightTurn )
     }
     playAnimations(actions);
     charMovement(fbx);
   });
-
-
-
-
-
-  
-  
-  
 }
 
 function switchWalkFB(e: KeyboardEvent) {
   switch (e.key) {
     case "Up":
-      case "ArrowUp":
-        case "w":
+    case "ArrowUp":
+    case "w":
       isWalking = true;
       break;
-      case "Down":
-        case "ArrowDown":
-          case "s":
+    case "Down":
+    case "ArrowDown":
+    case "s":
       isBacking = true;
 
     default:
       isWalking = false;
-    }
+  }
 }
 
+
+//, prevAction?:THREE.AnimationAction, activeAction?: THREE.AnimationAction
 // //animation handlers
 function playAnimations(actions: AnimationAction[]) {
   let idle = actions[0];
   let walk = actions[1];
-  let run = actions[4]
-  let stopWalk = actions [2]
-  
+  let run = actions[4];
+  let stopWalk = actions[2];
 
-  actions[0].play();
   
-  if(isRunning){
-    console.log('RUNNING');
+  // prevAction = activeAction;
+
+  if(!activeAction && !prevAction){
+    activeAction = idle; 
+    activeAction.play();
+    console.log("setting");
     
-    // actions[4].play()
-  }else if(isWalking){
-    console.log("WALKING");
-    
+    prevAction = idle;
+
   }
-  
-  
-  if (isWalking) {
-    actions[0].fadeOut(1).stop();
-    actions[1].play();
-  } else if(isRunning){
+//////////////////////////////start
 
-  }else {
-    actions[1].fadeOut(1).stop();
-  }
+if(isWalking){
 
 
+}else{
 
-
-  
 }
+
+
+
+
+activeAction.play()
+
+
+
+
+
+
+
+
+
+  
+///////////////////////////end
+}
+
 
 function charMovement(fbx: THREE.Mesh) {
+  if(isRunning){
+    fbx.translateZ(runningSpeed)
+
+  }
   if (isWalking) {
     // fbx.position.z += walkingSpeed;
-    // fbx.translateZ(walkingSpeed)
+    fbx.translateZ(walkingSpeed)
   }
-  if(leftTurn){
-    fbx.rotateY(.05)
+  if (leftTurn) {
+    fbx.rotateY(0.05);
   }
-  if(rightTurn){
-    fbx.rotateY(-.05)
+  if (rightTurn) {
+    fbx.rotateY(-0.05);
+    fbx.updateMatrix()
   }
 }
-
 
 //keeps track of pressed btns
-let keys:any = {};
+let keys: any = {};
 
-document.onkeydown = (e) =>{
-if(!keys[e.key]){
-  keys[e.key] = true
-}
+document.onkeydown = (e) => {
+  if (!keys[e.key]) {
+    keys[e.key] = true;
+  }
+};
 
+document.onkeyup = (e) => (keys[e.key] = false);
 
-}
-
-document.onkeyup = e =>{
-return  keys[e.key] = false
-//  console.log("deleting key: " ,keys[e.key]);
-//  for (var k in keys){
-//   if(keys[k] == keys[e.key]){
-//     console.log(k);
-    
-//   }
-   
-//  }
- 
-}
-  
-let move =()=>{
-
-
-  if(keys["ArrowUp"]){
-  //  console.log("walking");
-   isWalking = true;
-  }else{
+let move = () => {
+  if (keys["ArrowUp"] || keys["w"]) {
+    //  console.log("walking");
+    isWalking = true;
+  } else {
     isWalking = false;
   }
-  if(keys["Shift"]){
-  console.log("running");
-  isRunning = true;
-  isWalking = false;
-  }else{
+  if (keys["Shift"] &&( keys["ArrowUp"] || keys['w'])) {
+    isRunning = true;
+    isWalking = false;
+  } else {
     isRunning = false;
+    
   }
-}
+
+  if(( keys["ArrowRight"] || keys['d'])){
+rightTurn = true;
+  }else{
+    rightTurn =false
+  }
+  if(( keys["ArrowLeft"] || keys['a'])){
+    leftTurn = true
+  }else{
+    leftTurn = false;
+  }
+};
 
 setInterval(move, 100);
- 
 
 //turns events off when key is up
 // document.addEventListener("keyup", (e) => {
@@ -183,8 +197,4 @@ setInterval(move, 100);
 //     isWalking = false
 //   }
 
-
-
-
 // });
-

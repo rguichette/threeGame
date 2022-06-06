@@ -7,6 +7,9 @@ import MainChar from "../MainChar";
 
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import { useCamControls } from "../../controls/cameraControls";
+
+import {OrbitControls as OC} from "three/examples/jsm/controls/OrbitControls";
+
 export default function index() {
   let characterRef = useRef<THREE.Mesh>();
   // let characterRef =
@@ -33,13 +36,14 @@ let controls:PointerLockControls;
 
 
 
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 
+useHelper(camRef, CameraHelper);
 
-  useHelper(camRef, CameraHelper);
-
-  useCamControls(camRef, characterRef)
+useCamControls(camRef, characterRef)
+let testRef = useRef<RefObject<OC>>()
 
   return (
     <>
@@ -63,7 +67,6 @@ let controls:PointerLockControls;
         // near={1}
         // far={1000}
       />
-
       <ambientLight />
 {/* <PLC/> */}
       <Stars />
